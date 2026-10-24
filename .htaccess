@@ -1,0 +1,51 @@
+## =============================================
+## .htaccess untuk Alfa One - InfinityFree
+## Kompatibel dengan lokal (XAMPP) juga
+## =============================================
+
+# Aktifkan Rewrite Engine
+RewriteEngine On
+
+# Redirect HTTP ke HTTPS (hanya di hosting, bukan localhost)
+RewriteCond %{HTTPS} off
+RewriteCond %{HTTP_HOST} !^localhost$ [NC]
+RewriteCond %{HTTP_HOST} !^127\.0\.0\.1$ [NC]
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Cegah directory browsing
+Options -Indexes
+
+# Set default charset
+AddDefaultCharset UTF-8
+
+# Set PHP max upload size (InfinityFree mungkin override ini)
+php_value upload_max_filesize 10M
+php_value post_max_size 12M
+php_value max_execution_time 120
+
+# Handle error pages
+ErrorDocument 404 /index.php
+ErrorDocument 403 /index.php
+
+# Proteksi file konfigurasi
+<FilesMatch "^(database\.php|auth\.php|\.htaccess|\.env)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Cegah akses ke file SQL
+<FilesMatch "\.(sql|log|bak)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Cache untuk file statis (opsional, mempercepat loading)
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/jpeg "access plus 1 month"
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType image/gif "access plus 1 month"
+    ExpiresByType image/webp "access plus 1 month"
+    ExpiresByType text/css "access plus 1 week"
+    ExpiresByType application/javascript "access plus 1 week"
+</IfModule>

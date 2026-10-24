@@ -1,0 +1,3 @@
+# Cegah akses langsung ke folder config dari browser
+Order Allow,Deny
+Deny from all
